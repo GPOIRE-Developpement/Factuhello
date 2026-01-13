@@ -4,6 +4,7 @@ namespace guillaumepaquin\factuhello\action;
 
 use guillaumepaquin\factuhello\model\AccountModel;
 use guillaumepaquin\factuhello\render\DashboardRenderer;
+use guillaumepaquin\factuhello\model\PatientModel;
 
 /**
  * Action par défaut : page de tableau de bord
@@ -19,6 +20,8 @@ class DashboardAction extends Action {
             exit();
         }
 
-        return DashboardRenderer::render();    
+        $patients = PatientModel::getPatients();
+
+        return DashboardRenderer::render($patients);    
     }
 }
