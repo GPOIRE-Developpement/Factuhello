@@ -7,11 +7,11 @@ use guillaumepaquin\factuhello\render\ErrorRenderer;
 use guillaumepaquin\factuhello\model\BenefitModel;
 
 /**
- * Action par défaut : page de tableau de bord
+ * Action par défaut : page d'ajout d'une prestation
  */
 class AddBenefitAction extends Action {
     /**
-     * Execute lorsqu'il n'y a pas d'action spécifique demandée, retourne la page d'ajout d'une préstation
+     * Execute lorsqu'il n'y a pas d'action spécifique demandée, retourne la page d'ajout d'une prestation
      * @return string
      */
     public static function execute(): string {
