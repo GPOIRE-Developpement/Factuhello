@@ -50,9 +50,9 @@ class Repository {
         $this->pdo->exec("
             CREATE TABLE IF NOT EXISTS users (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                password_hash VARCHAR(255) NOT NULL,
-                reset_token VARCHAR(255),
+                email VARCHAR(190) UNIQUE NOT NULL,
+                password_hash VARCHAR(190) NOT NULL,
+                reset_token VARCHAR(190),
                 reset_token_expiry DATETIME
             );
         ");
@@ -60,8 +60,8 @@ class Repository {
         $this->pdo->exec("
             CREATE TABLE IF NOT EXISTS patients (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) UNIQUE NOT NULL,
+                name VARCHAR(190) NOT NULL,
+                email VARCHAR(190) UNIQUE NOT NULL,
                 phone VARCHAR(50),
                 address TEXT,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -72,7 +72,7 @@ class Repository {
         $this->pdo->exec("
             CREATE TABLE IF NOT EXISTS benefits (
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
+                name VARCHAR(190) NOT NULL,
                 description TEXT,
                 price DECIMAL(10,2) NOT NULL
             );
