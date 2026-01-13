@@ -18,23 +18,40 @@ class AddBenefitRenderer {
                 <p>Contenu du modal prestation</p>
                 
                 <div class="name">
-                    <label for="name">Nom :</label>
-                    <input type="text" id="name" name="name" required>
+                    <label for="benefit-name">Nom :</label>
+                    <input type="text" id="benefit-name" name="name" required>
                 </div>
 
                 <div class="description">
-                    <label for="description">Description :</label>
-                    <input type="text" id="description" name="description" required>
+                    <label for="benefit-description">Description :</label>
+                    <input type="text" id="benefit-description" name="description" required>
                 </div>
 
                 <div class="price">
-                    <label for="price">Prix :</label>
-                    <input type="number" id="price" name="price" required>
+                    <label for="benefit-price">Prix :</label>
+                    <input type="number" id="benefit-price" name="price" required>
                 </div>
 
                 <button onclick="submitNewBenefit()">Ajouter la prestation</button>
                 <button onclick="modalBenefit.close()">Fermer</button>
             </dialog>
+
+            <script>
+                async function submitNewBenefit(){
+                    const data = new FormData();
+                    data.append("name", document.getElementById('benefit-name').value);
+                    data.append("description", document.getElementById('benefit-description').value);
+                    data.append("price", document.getElementById('benefit-price').value);
+
+                    const response = await fetch("?action=add-benefit", {
+                        method: "POST",
+                        body: data
+                    });
+
+                    const html = await response.text();
+                    document.body.innerHTML = html;
+                }
+            </script>
         HTML;
     }
 }

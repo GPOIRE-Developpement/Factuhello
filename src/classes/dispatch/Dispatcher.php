@@ -9,6 +9,7 @@ use guillaumepaquin\factuhello\action\ForgotAction;
 use guillaumepaquin\factuhello\action\ResetAction;
 use guillaumepaquin\factuhello\action\DashboardAction;
 use guillaumepaquin\factuhello\action\ProfilAction;
+use guillaumepaquin\factuhello\action\AddBenefitAction;
 
 /**
  * Classe de routage principal de l'application
@@ -29,6 +30,7 @@ class Dispatcher{
             "reset" => ResetAction::class,
             "dashboard" => DashboardAction::class,
             "profil" => ProfilAction::class,
+            "add-benefit" => AddBenefitAction::class
         );
 
         // Dashboard
