@@ -33,7 +33,7 @@ class RegisterAction extends Action {
             $email = filter_var($email, FILTER_SANITIZE_EMAIL);
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);
 
-            return AccountModel::login($email, $passwordHash);
+            return AccountModel::register($email, $passwordHash);
         }else{
             return RegisterRenderer::render();
         }
