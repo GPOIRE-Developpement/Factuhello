@@ -1,0 +1,4 @@
+db.config.ini
+mail.config.ini
+/vendor
+composer.lock

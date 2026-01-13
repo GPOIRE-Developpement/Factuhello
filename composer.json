@@ -1,0 +1,19 @@
+{
+    "name": "guillaumepaquin/generateur-pdf",
+    "description": "Générateur de factures PDF",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "phpmailer/phpmailer": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "guillaumepaquin\\factuhello\\": "src/classes/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Guillaume Paquin"
+        }
+    ]
+}
