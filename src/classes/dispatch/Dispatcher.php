@@ -2,6 +2,7 @@
 namespace guillaumepaquin\factuhello\dispatch;
 
 use guillaumepaquin\factuhello\action\DefaultAction;
+use guillaumepaquin\factuhello\render\EditPatientRenderer;
 use guillaumepaquin\factuhello\render\PageRenderer;
 use guillaumepaquin\factuhello\action\LoginAction;
 use guillaumepaquin\factuhello\action\RegisterAction;
@@ -11,6 +12,7 @@ use guillaumepaquin\factuhello\action\DashboardAction;
 use guillaumepaquin\factuhello\action\ProfilAction;
 use guillaumepaquin\factuhello\action\AddBenefitAction;
 use guillaumepaquin\factuhello\action\AddPatientAction;
+use guillaumepaquin\factuhello\action\EditPatientAction;
 
 /**
  * Classe de routage principal de l'application
@@ -32,7 +34,8 @@ class Dispatcher{
             "dashboard" => DashboardAction::class,
             "profil" => ProfilAction::class,
             "add-benefit" => AddBenefitAction::class,
-            "add-patient" => AddPatientAction::class
+            "add-patient" => AddPatientAction::class,
+            "edit-patient" => EditPatientAction::class,
         );
 
         // Dashboard

@@ -5,6 +5,7 @@ namespace guillaumepaquin\factuhello\action;
 use guillaumepaquin\factuhello\model\AccountModel;
 use guillaumepaquin\factuhello\render\ProfilRenderer;
 use guillaumepaquin\factuhello\model\PatientModel;
+use guillaumepaquin\factuhello\render\ErrorRenderer;
 
 /**
  * Action pour afficher le profil d'un patient

@@ -85,4 +85,28 @@ class PatientModel {
             return null;
         }
     }
+
+    public static function editPatient($id, $name, $email, $phone, $address):string {
+        $pdo = Repository::getInstance()->getPdo();
+
+        $url = "?action=dashboard";
+        if(isset($id)){
+            $url = "?action=profil&id=" . urlencode($id);
+        }
+
+        try{
+            $stmt = $pdo->prepare("UPDATE patients SET name = :name, email = :email, phone = :phone, address = :address WHERE id = :id");
+            $stmt->execute([
+                ':id' => $id,
+                ':name' => $name,
+                ':email' => $email,
+                ':phone' => $phone,
+                ':address' => $address
+            ]);
+
+            return SuccessRenderer::render("Patient modifié avec succès.", $url);
+        }catch(\PDOException $e){
+            return ErrorRenderer::render("Erreur lors de la modification du patient : erreur de base de données.", $url);
+        }
+    }
 }

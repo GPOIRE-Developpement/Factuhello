@@ -2,6 +2,8 @@
 
 namespace guillaumepaquin\factuhello\render;
 
+use guillaumepaquin\factuhello\render\EditPatientRenderer;
+
 /**
  * Classe responsable du rendu de la page profil
  */
@@ -12,6 +14,8 @@ class ProfilRenderer {
      * @return string Contenu de la page profil
      */
     public static function render($id, $email, $name, $phone, $address, $nbC, $nbF): string {
+        $editPatientModal = EditPatientRenderer::render($id, $name, $email, $phone, $address);
+        
         return <<<HTML
             <div class="profil-container">
                 <h2>Profil du patient</h2>
@@ -27,7 +31,7 @@ class ProfilRenderer {
                 </div>
 
                 <div class="profil-actions">
-                    <button onclick="alert('Modifier les informations')">Modifier les informations</button>
+                    $editPatientModal
                     <button onclick="alert('Supprimer le patient')">Supprimer le patient</button>
                     <button onclick="alert('Ajouter une séance')">Ajouter une séance</button>
                     <button onclick="alert('Générer une facture')">Générer une facture</button>
