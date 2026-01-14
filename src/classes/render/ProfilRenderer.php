@@ -2,7 +2,10 @@
 
 namespace guillaumepaquin\factuhello\render;
 
+use guillaumepaquin\factuhello\model\PatientModel;
 use guillaumepaquin\factuhello\render\EditPatientRenderer;
+use guillaumepaquin\factuhello\render\RemovePatientRenderer;
+use guillaumepaquin\factuhello\render\AddConsultationRenderer;
 
 /**
  * Classe responsable du rendu de la page profil
@@ -14,8 +17,11 @@ class ProfilRenderer {
      * @return string Contenu de la page profil
      */
     public static function render($id, $email, $name, $phone, $address, $nbC, $nbF): string {
+        $consultations = PatientModel::getConsultationsByPatientId($id);
+    
         $editPatientModal = EditPatientRenderer::render($id, $name, $email, $phone, $address);
         $removePatientModal = RemovePatientRenderer::render($id, $name, $email, $phone, $address);
+        $addConsultationModal = AddConsultationRenderer::render($id);
 
         return <<<HTML
             <div class="profil-container">
@@ -34,16 +40,37 @@ class ProfilRenderer {
                 <div class="profil-actions">
                     $editPatientModal
                     $removePatientModal
-                    <button onclick="alert('Ajouter une séance')">Ajouter une séance</button>
+                    $addConsultationModal
                     <button onclick="alert('Générer une facture')">Générer une facture</button>
                 </div>
 
                 <p>Liste des consultations</p>
+                <table>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Facturée</th>
+                        <th>Action</th>
+                    </tr>
+                    $consultations
+                </table>
 
                 <p>List des factures</p>
                 
                 <a href="?action=dashboard" class="back-link">← Retour à la liste des patients</a>
             </div>
+        HTML;
+    }
+
+    public static function renderConsultation($id, $name, $time, $benefitName):string{
+        return <<<HTML
+            <tr>
+                <td>$name</td>
+                <td>$time</td>
+                <td>Oui</td>
+                <td>$benefitName</td>
+            </tr>
         HTML;
     }
 }

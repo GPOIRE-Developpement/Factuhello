@@ -6,6 +6,7 @@ use guillaumepaquin\factuhello\model\Repository;
 use guillaumepaquin\factuhello\render\SuccessRenderer;
 use guillaumepaquin\factuhello\render\ErrorRenderer;
 use guillaumepaquin\factuhello\render\DashboardRenderer;
+use guillaumepaquin\factuhello\render\ProfilRenderer;
 
 class PatientModel {
     public static function getPatients(){
@@ -107,6 +108,57 @@ class PatientModel {
             return SuccessRenderer::render("Patient modifié avec succès.", $url);
         }catch(\PDOException $e){
             return ErrorRenderer::render("Erreur lors de la modification du patient : erreur de base de données.", $url);
+        }
+    }
+
+    public static function addConsultation($patientId, $date, $benefitId): string{
+        $pdo = Repository::getInstance()->getPdo();
+
+        $url = "?action=dashboard";
+        if(isset($patientId)){
+            $url = "?action=profil&id=" . urlencode($patientId);
+        }
+
+        try{
+            $stmt = $pdo->prepare("INSERT INTO consultations (patient_id, date, benefit_id) VALUES (:patient_id, :date, :benefit_id)");
+            $stmt->execute([
+                ':patient_id' => $patientId,
+                ':date' => $date,
+                ':benefit_id' => $benefitId
+            ]);
+
+            return SuccessRenderer::render("Consultation ajoutée avec succès.", $url);
+        }catch(\PDOException $e){
+            return ErrorRenderer::render("Erreur lors de l'ajout de la consultation : erreur de base de données.", $url);
+        }
+    }
+
+    public static function getConsultationsByPatientId($patientId): string {
+        $pdo = Repository::getInstance()->getPdo();
+        $consultations = "";
+
+        try{
+            $stmt = $pdo->prepare("SELECT c.id, c.date, b.name as benefit_name, b.price as benefit_price
+                FROM consultations c
+                INNER JOIN benefits b ON c.benefit_id = b.id
+                WHERE c.patient_id = :patient_id
+                ORDER BY c.date DESC");
+            $stmt->execute([
+                ':patient_id' => $patientId
+            ]);
+
+            while($row = $stmt->fetch()){
+                $consultations .= ProfilRenderer::renderConsultation(
+                    $row['id'],
+                    $row['benefit_name'],
+                    $row['date'],
+                    $row['benefit_name']
+                );
+            }
+
+            return $consultations;
+        }catch(\PDOException $e){
+            return [];
         }
     }
 

@@ -28,5 +28,26 @@ class BenefitModel {
     // Méthode pour supprimer une prestation
 
     // Récupérer l'ensemble des prestations
+    public static function getBenefits(): array {
+        $pdo = Repository::getInstance()->getPdo();
+        $benefits = [];
 
+        try{
+            $stmt = $pdo->prepare("SELECT * FROM benefits");
+            $stmt->execute();
+
+            while($row = $stmt->fetch()){
+                $benefits[] = [
+                    'id' => $row['id'],
+                    'name' => $row['name'],
+                    'description' => $row['description'],
+                    'price' => $row['price']
+                ];
+            }
+
+            return $benefits;
+        }catch(\PDOException $e){
+            return [];
+        }
+    }
 }

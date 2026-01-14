@@ -14,6 +14,7 @@ use guillaumepaquin\factuhello\action\AddBenefitAction;
 use guillaumepaquin\factuhello\action\AddPatientAction;
 use guillaumepaquin\factuhello\action\EditPatientAction;
 use guillaumepaquin\factuhello\action\RemovePatientAction;
+use guillaumepaquin\factuhello\action\AddConsultationAction;
 
 /**
  * Classe de routage principal de l'application
@@ -38,6 +39,7 @@ class Dispatcher{
             "add-patient" => AddPatientAction::class,
             "edit-patient" => EditPatientAction::class,
             "remove-patient" => RemovePatientAction::class,
+            "add-consultation" => AddConsultationAction::class,
         );
 
         // Dashboard
