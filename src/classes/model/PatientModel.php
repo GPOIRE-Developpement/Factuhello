@@ -109,4 +109,45 @@ class PatientModel {
             return ErrorRenderer::render("Erreur lors de la modification du patient : erreur de base de données.", $url);
         }
     }
+
+    public static function removePatient($id):string {
+        $pdo = Repository::getInstance()->getPdo();
+
+        $url = "?action=dashboard";
+        if(isset($id)){
+            $url = "?action=profil&id=" . urlencode($id);
+        }
+
+        try{
+            $stmt = $pdo->prepare("SELECT COUNT(*) as nb_unbilled FROM consultations WHERE patient_id = :id AND id NOT IN (SELECT consultation_id FROM invoice_consultations)");
+            $stmt->execute([
+                ':id' => $id
+            ]);
+
+            $row = $stmt->fetch();
+            if($row['nb_unbilled'] > 0){
+                return ErrorRenderer::render("Impossible de supprimer le patient : il a des prestations non facturées.", $url);
+            }
+
+            $stmt = $pdo->prepare("DELETE FROM patients WHERE id = :id");
+            $stmt->execute([
+                ':id' => $id
+            ]);
+
+            $stmt = $pdo->prepare("DELETE FROM consultations WHERE patient_id = :id");
+            $stmt->execute([
+                ':id' => $id
+            ]);
+
+            $stmt = $pdo->prepare("DELETE ic FROM invoice_consultations ic INNER JOIN
+                    consultations c ON ic.consultation_id = c.id WHERE c.patient_id = :id");
+            $stmt->execute([
+                ':id' => $id
+            ]);
+
+            return SuccessRenderer::render("Patient supprimé avec succès.", "?action=dashboard");
+        }catch(\PDOException $e){
+            return ErrorRenderer::render("Erreur lors de la suppression du patient : erreur de base de données.", $url);
+        }
+    }
 }

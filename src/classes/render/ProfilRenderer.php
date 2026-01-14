@@ -15,7 +15,8 @@ class ProfilRenderer {
      */
     public static function render($id, $email, $name, $phone, $address, $nbC, $nbF): string {
         $editPatientModal = EditPatientRenderer::render($id, $name, $email, $phone, $address);
-        
+        $removePatientModal = RemovePatientRenderer::render($id, $name, $email, $phone, $address);
+
         return <<<HTML
             <div class="profil-container">
                 <h2>Profil du patient</h2>
@@ -32,7 +33,7 @@ class ProfilRenderer {
 
                 <div class="profil-actions">
                     $editPatientModal
-                    <button onclick="alert('Supprimer le patient')">Supprimer le patient</button>
+                    $removePatientModal
                     <button onclick="alert('Ajouter une séance')">Ajouter une séance</button>
                     <button onclick="alert('Générer une facture')">Générer une facture</button>
                 </div>

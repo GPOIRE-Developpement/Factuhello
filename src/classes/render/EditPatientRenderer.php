@@ -15,7 +15,7 @@ class EditPatientRenderer {
             <button onclick="modalEditPatient.showModal()">Modifier le patient</button>
 
             <dialog id="modalEditPatient">
-                <p>Ajouter un nouveau patient</p>
+                <p>Modification d'un patient</p>
 
                 <input type="hidden" id="patient-id" name="patient-id" value="{$id}">
 
