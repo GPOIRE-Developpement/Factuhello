@@ -18,6 +18,7 @@ class ProfilRenderer {
      */
     public static function render($id, $email, $name, $phone, $address, $nbC, $nbF): string {
         $consultations = PatientModel::getConsultationsByPatientId($id);
+        $invoices = PatientModel::getInvoicesByPatientId($id);
     
         $editPatientModal = EditPatientRenderer::render($id, $name, $email, $phone, $address);
         $removePatientModal = RemovePatientRenderer::render($id, $name, $email, $phone, $address);
@@ -57,6 +58,16 @@ class ProfilRenderer {
                 </table>
 
                 <p>List des factures</p>
+                <table>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Montant Total</th>
+                        <th>Date</th>
+                        <th>Nb Consultations</th>
+                        <th>Action</th>
+                    </tr>
+                    $invoices
+                </table>
                 
                 <a href="?action=dashboard" class="back-link">← Retour à la liste des patients</a>
             </div>
@@ -70,6 +81,18 @@ class ProfilRenderer {
                 <td>$time</td>
                 <td>Oui</td>
                 <td>$benefitName</td>
+            </tr>
+        HTML;
+    }
+
+    public static function renderInvoice($id, $totalAmount, $createdAt, $nbConsultations):string{
+        return <<<HTML
+            <tr>
+                <td>$id</td>
+                <td>$totalAmount €</td>
+                <td>$createdAt</td>
+                <td>$nbConsultations</td>
+                <td><button onclick="alert('Télécharger facture #$id')">Télécharger</button></td>
             </tr>
         HTML;
     }

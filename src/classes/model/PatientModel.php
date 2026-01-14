@@ -162,6 +162,37 @@ class PatientModel {
         }
     }
 
+    public static function getInvoicesByPatientId($patientId): string {
+        $pdo = Repository::getInstance()->getPdo();
+        $invoices = "";
+
+        try{
+            $stmt = $pdo->prepare("SELECT i.id, i.total_amount, i.created_at, COUNT(ic.consultation_id) as nb_consultations
+                FROM invoices i
+                INNER JOIN invoice_consultations ic ON i.id = ic.invoice_id
+                INNER JOIN consultations c ON ic.consultation_id = c.id
+                WHERE c.patient_id = :patient_id
+                GROUP BY i.id, i.total_amount, i.created_at
+                ORDER BY i.created_at DESC");
+            $stmt->execute([
+                ':patient_id' => $patientId
+            ]);
+
+            while($row = $stmt->fetch()){
+                $invoices .= ProfilRenderer::renderInvoice(
+                    $row['id'],
+                    $row['total_amount'],
+                    $row['created_at'],
+                    $row['nb_consultations']
+                );
+            }
+
+            return $invoices;
+        }catch(\PDOException $e){
+            return "";
+        }
+    }
+
     public static function removePatient($id):string {
         $pdo = Repository::getInstance()->getPdo();
 
