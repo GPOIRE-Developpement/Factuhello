@@ -7,8 +7,8 @@ namespace guillaumepaquin\factuhello\render;
  */
 class EditPatientRenderer {
     /**
-     * Génère le HTML de la page d'ajout d'un patient
-     * @return string Contenu de la page d'ajout d'un patient
+     * Génère le HTML de la page de modification d'un patient
+     * @return string Contenu de la page de modification d'un patient
      */
     public static function render($id, $name, $email, $phone, $address): string {
         return <<<HTML

@@ -7,11 +7,11 @@ use guillaumepaquin\factuhello\render\ErrorRenderer;
 use guillaumepaquin\factuhello\model\PatientModel;
 
 /**
- * Action par défaut : page d'ajout d'un patient
+ * Action par défaut : page de modification d'un patient
  */
 class EditPatientAction extends Action {
     /**
-     * Execute lorsqu'il n'y a pas d'action spécifique demandée, retourne la page d'ajout d'un patient
+     * Execute lorsqu'il n'y a pas d'action spécifique demandée, retourne la page de modification d'un patient
      * @return string
      */
     public static function execute(): string {
