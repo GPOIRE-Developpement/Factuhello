@@ -6,6 +6,7 @@ use guillaumepaquin\factuhello\model\PatientModel;
 use guillaumepaquin\factuhello\render\EditPatientRenderer;
 use guillaumepaquin\factuhello\render\RemovePatientRenderer;
 use guillaumepaquin\factuhello\render\AddConsultationRenderer;
+use guillaumepaquin\factuhello\render\SelectConsultRenderer;
 
 /**
  * Classe responsable du rendu de la page profil
@@ -23,6 +24,7 @@ class ProfilRenderer {
         $editPatientModal = EditPatientRenderer::render($id, $name, $email, $phone, $address);
         $removePatientModal = RemovePatientRenderer::render($id, $name, $email, $phone, $address);
         $addConsultationModal = AddConsultationRenderer::render($id);
+        $selectConsultModal = SelectConsultRenderer::render($id);
 
         return <<<HTML
             <div class="profil-container">
@@ -42,7 +44,7 @@ class ProfilRenderer {
                     $editPatientModal
                     $removePatientModal
                     $addConsultationModal
-                    <button onclick="alert('Générer une facture')">Générer une facture</button>
+                    $selectConsultModal
                 </div>
 
                 <p>Liste des consultations</p>

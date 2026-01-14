@@ -193,6 +193,30 @@ class PatientModel {
         }
     }
 
+    public static function getUnbilledConsultationsByPatientId($patientId): array {
+        $pdo = Repository::getInstance()->getPdo();
+        $consultations = [];
+
+        try{
+            $stmt = $pdo->prepare("SELECT c.id, c.date, b.name as benefit_name, b.price as benefit_price
+                FROM consultations c
+                INNER JOIN benefits b ON c.benefit_id = b.id
+                WHERE c.patient_id = :patient_id AND c.id NOT IN (SELECT consultation_id FROM invoice_consultations)
+                ORDER BY c.date DESC");
+            $stmt->execute([
+                ':patient_id' => $patientId
+            ]);
+
+            while($row = $stmt->fetch()){
+                $consultations[] = $row;
+            }
+
+            return $consultations;
+        }catch(\PDOException $e){
+            return [];
+        }
+    }
+
     public static function removePatient($id):string {
         $pdo = Repository::getInstance()->getPdo();
 
