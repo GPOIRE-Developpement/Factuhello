@@ -15,6 +15,9 @@ class DashboardRenderer {
         $benefitModal = AddBenefitRenderer::render();
 
         return <<<HTML
+            <div>
+                <a href="?action=logout">🚪 Déconnexion</a>
+            </div>
             <p>Liste des patients</p>
             <table>
                 <tr>

@@ -2,25 +2,24 @@
 
 namespace guillaumepaquin\factuhello\action;
 
+use guillaumepaquin\factuhello\action\Action;
 use guillaumepaquin\factuhello\model\InvoiceModel;
-use guillaumepaquin\factuhello\model\PatientModel;
+use guillaumepaquin\factuhello\render\ErrorRenderer;
 
 /**
  * Action pour générer une facture
  */
 class GenerateInvoiceAction extends Action {
-    public function execute() {
+    public static function execute(): string {
         if (!isset($_POST['patient_id']) || !isset($_POST['consultation_ids'])) {
-            return json_encode(['error' => 'Données manquantes']);
+            return ErrorRenderer::render("Erreur : paramètres manquants pour la génération de la facture.","?action=dashboard");
         }
 
         $patientId = $_POST['patient_id'];
         $consultationIds = json_decode($_POST['consultation_ids'], true);
         $reductionPercent = isset($_POST['reduction_percent']) ? floatval($_POST['reduction_percent']) : 0;
 
-        if (empty($consultationIds)) {
-            return json_encode(['error' => 'Aucune consultation sélectionnée']);
-        }
+        var_dump($consultationIds);
 
         // Générer la facture
         return InvoiceModel::generateInvoice($patientId, $consultationIds, $reductionPercent);

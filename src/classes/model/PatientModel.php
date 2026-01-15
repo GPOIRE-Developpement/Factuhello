@@ -183,7 +183,8 @@ class PatientModel {
                     $row['id'],
                     $row['total_amount'],
                     $row['created_at'],
-                    $row['nb_consultations']
+                    $row['nb_consultations'],
+                    $patientId
                 );
             }
 

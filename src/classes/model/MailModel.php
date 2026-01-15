@@ -85,10 +85,11 @@ class MailModel {
      * @param string $to Adresse email du destinataire
      * @param string $subject Sujet de l'email
      * @param string $htmlBody Corps de l'email en HTML
+     * @param string $attachmentPath Chemin vers un fichier à joindre (optionnel)
      * @param string $textBody Corps de l'email en texte brut (optionnel)
      * @return bool True si l'email a été envoyé, False sinon
      */
-    public static function sendEmail(string $to, string $subject, string $htmlBody, string $textBody = ''): bool {
+    public static function sendEmail(string $to, string $subject, string $htmlBody, string $attachmentPath = '', string $textBody = ''): bool {
         try {
             $mail = self::getMailer();
             $mail->addAddress($to);
@@ -97,6 +98,11 @@ class MailModel {
             $mail->Subject = $subject;
             $mail->Body = $htmlBody;
             $mail->AltBody = $textBody ?: strip_tags($htmlBody);
+
+            // Ajouter la pièce jointe si un chemin est fourni
+            if ($attachmentPath && file_exists($attachmentPath)) {
+                $mail->addAttachment($attachmentPath);
+            }
 
             $mail->send();
             return true;
@@ -161,5 +167,37 @@ class MailModel {
         return <<<HTML
             <a href="{$resetLink}">{$resetLink}</a>
         HTML;
+    }
+
+    /**
+     * Envoie un email avec un PDF en pièce jointe (contenu direct)
+     * 
+     * @param string $to Adresse email du destinataire
+     * @param string $subject Sujet de l'email
+     * @param string $htmlBody Corps de l'email en HTML
+     * @param string $filename Nom du fichier PDF
+     * @param string $pdfContent Contenu du PDF en bytes
+     * @return bool True si l'email a été envoyé, False sinon
+     */
+    public static function sendEmailWithPdfContent(string $to, string $subject, string $htmlBody, string $filename, string $pdfContent): bool {
+        try {
+            $mail = self::getMailer();
+            $mail->addAddress($to);
+
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $htmlBody;
+            $mail->AltBody = strip_tags($htmlBody);
+
+            // Ajouter le PDF en pièce jointe avec le contenu direct
+            $mail->addStringAttachment($pdfContent, $filename, 'base64', 'application/pdf');
+
+            $mail->send();
+            return true;
+
+        } catch (\Throwable $e) {
+            error_log("Erreur envoi email avec PDF: " . $e->getMessage());
+            return false;
+        }
     }
 }

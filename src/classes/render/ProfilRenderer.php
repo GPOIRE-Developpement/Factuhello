@@ -20,6 +20,8 @@ class ProfilRenderer {
     public static function render($id, $email, $name, $phone, $address, $nbC, $nbF): string {
         $consultations = PatientModel::getConsultationsByPatientId($id);
         $invoices = PatientModel::getInvoicesByPatientId($id);
+        $unbilledConsultations = PatientModel::getUnbilledConsultationsByPatientId($id);
+        $nbUnbilled = count($unbilledConsultations);
     
         $editPatientModal = EditPatientRenderer::render($id, $name, $email, $phone, $address);
         $removePatientModal = RemovePatientRenderer::render($id, $name, $email, $phone, $address);
@@ -38,6 +40,7 @@ class ProfilRenderer {
                     <p><strong>Adresse:</strong>$address</p>
                     <p><strong>Nb consultations:</strong>$nbC</p>
                     <p><strong>Nb factures:</strong>$nbF</p>
+                    <p><strong>Consultations non facturées:</strong> $nbUnbilled</p>
                 </div>
 
                 <div class="profil-actions">
@@ -87,14 +90,17 @@ class ProfilRenderer {
         HTML;
     }
 
-    public static function renderInvoice($id, $totalAmount, $createdAt, $nbConsultations):string{
+    public static function renderInvoice($id, $totalAmount, $createdAt, $nbConsultations, $patientId):string{
         return <<<HTML
             <tr>
                 <td>$id</td>
                 <td>$totalAmount €</td>
                 <td>$createdAt</td>
                 <td>$nbConsultations</td>
-                <td><button onclick="alert('Télécharger facture #$id')">Télécharger</button></td>
+                <td>
+                    <a href="?action=download-invoice&id=$id">Télécharger</a>
+                    <a href="?action=resend-invoice&id=$id&patient=$patientId">Renvoyer par mail</a>
+                </td>
             </tr>
         HTML;
     }
