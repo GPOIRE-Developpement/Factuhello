@@ -20,52 +20,57 @@ class AddConsultationRenderer {
         $options = self::renderListOptions($benefits);
 
         return <<<HTML
-            <button onclick="modalAddConsultation.showModal()">Ajouter d'une consultation</button>
+<button type="button" class="button button-primary" onclick="modalAddConsultation.showModal()">Ajouter une séance</button>
 
-            <dialog id="modalAddConsultation">
-                <p>Contenu du modal prestation</p>
-                
-                <input type="hidden" id="consultation-patientid" name="patient-id" value="{$id}">
+<dialog id="modalAddConsultation">
+	<div class="modal-invoice">
+		<p class="modal-title">Ajouter une séance</p>
+		<p class="modal-subtitle">Choisissez la date de la séance et la prestation associée.</p>
 
-                <div class="time">
-                    <label for="consultation-date">Date :</label>
-                    <input
-                    type="date"
-                    id="consultation-date"
-                    name="consultation-date"
-                    value={$today}
-                    min={$min}
-                    max={$max} />
-                </div>
+		<input type="hidden" id="consultation-patientid" name="patient-id" value="{$id}">
 
-                <div class="type">
-                    <label for="consultation-type">Type de consultation</label>
-                    <select id="consultation-type" name="consultation-type">
-                        $options
-                    </select>
-                </div>
+		<div class="field-group">
+			<label for="consultation-date">Date de la séance</label>
+			<input
+				type="date"
+				id="consultation-date"
+				name="consultation-date"
+				class="date-field"
+				value="{$today}"
+				min="{$min}"
+				max="{$max}" />
+		</div>
+		<div class="field-group">
+			<label for="consultation-type">Type de consultation</label>
+			<select id="consultation-type" name="consultation-type" class="select-field">
+				$options
+			</select>
+		</div>
 
-                <button onclick="submitNewBenefit()">Ajouter la prestation</button>
-                <button onclick="modalAddConsultation.close()">Fermer</button>
-            </dialog>
+		<div class="action-container modal-actions">
+			<button onclick="submitNewBenefit()" class="button button-primary">Ajouter la séance</button>
+			<button onclick="modalAddConsultation.close()" class="button button-ghost">Fermer</button>
+		</div>
+	</div>
+</dialog>
 
-            <script>
-                async function submitNewBenefit(){
-                    const data = new FormData();
-                    data.append("patient", document.getElementById('consultation-patientid').value);
-                    data.append("time", document.getElementById('consultation-date').value);
-                    data.append("benefit", document.getElementById('consultation-type').value);
+<script>
+	async function submitNewBenefit(){
+		const data = new FormData();
+		data.append("patient", document.getElementById('consultation-patientid').value);
+		data.append("time", document.getElementById('consultation-date').value);
+		data.append("benefit", document.getElementById('consultation-type').value);
 
-                    const response = await fetch("?action=add-consultation", {
-                        method: "POST",
-                        body: data
-                    });
+		const response = await fetch("?action=add-consultation", {
+			method: "POST",
+			body: data
+		});
 
-                    const html = await response.text();
-                    document.body.innerHTML = html;
-                }
-            </script>
-        HTML;
+		const html = await response.text();
+		document.body.innerHTML = html;
+	}
+</script>
+HTML;
     }
 
     public static function renderListOptions($benefits): string {

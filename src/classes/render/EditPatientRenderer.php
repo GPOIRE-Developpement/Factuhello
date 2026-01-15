@@ -12,7 +12,7 @@ class EditPatientRenderer {
      */
     public static function render($id, $name, $email, $phone, $address): string {
         return <<<HTML
-            <button onclick="modalEditPatient.showModal()">Modifier le patient</button>
+    			<button type="button" class="button button-secondary" onclick="modalEditPatient.showModal()">Modifier les informations</button>
 
             <dialog id="modalEditPatient">
                 <p>Modification d'un patient</p>
@@ -40,8 +40,8 @@ class EditPatientRenderer {
                 </div>
 
 
-                <button onclick="submitEditPatient()">Modifier le patient</button>
-                <button onclick="modalEditPatient.close()">Fermer</button>
+                <button onclick="submitEditPatient()" class="button button-primary">Modifier le patient</button>
+                <button onclick="modalEditPatient.close()" class="button button-ghost">Fermer</button>
             </dialog>
 
             <script>
@@ -62,6 +62,6 @@ class EditPatientRenderer {
                     document.body.innerHTML = html;
                 }
             </script>
-        HTML;
+HTML;
     }
 }

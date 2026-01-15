@@ -19,8 +19,6 @@ class GenerateInvoiceAction extends Action {
         $consultationIds = json_decode($_POST['consultation_ids'], true);
         $reductionPercent = isset($_POST['reduction_percent']) ? floatval($_POST['reduction_percent']) : 0;
 
-        var_dump($consultationIds);
-
         // Générer la facture
         return InvoiceModel::generateInvoice($patientId, $consultationIds, $reductionPercent);
     }

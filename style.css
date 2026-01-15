@@ -1,0 +1,1378 @@
+/*
+ * Feuille de style principale Factuhello
+ * Thème médical, responsive, basé sur des variables de couleur
+ * Pour basculer en mode sombre : ajouter data-theme="dark" sur <html> ou <body>
+ */
+
+/* =====================
+   Variables de thème
+   ===================== */
+
+:root {
+	/* Palette principale (clair) */
+	--color-bg: #f5f7fb;               /* fond global très léger */
+	--color-surface: #ffffff;          /* cartes / formulaires */
+	--color-surface-soft: #e9f0ff;     /* éléments mis en avant */
+
+	--color-primary: #1a73e8;          /* bleu médical principal */
+	--color-primary-soft: #e3f2fd;
+	--color-primary-strong: #1557b0;
+
+	--color-accent: #00b894;           /* vert validation */
+	--color-accent-soft: #e3fff8;
+
+	--color-danger: #e53935;           /* erreurs / actions destructrices */
+	--color-danger-soft: #ffebee;
+
+	--color-text: #1b2430;             /* texte principal */
+	--color-text-soft: #5b6575;        /* texte secondaire */
+	--color-border: #d0d7e2;
+
+	--shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.10);
+	--radius-lg: 18px;
+	--radius-md: 12px;
+	--radius-sm: 8px;
+
+	--font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+	--transition-fast: 150ms ease-out;
+	--transition-med: 220ms ease-out;
+
+	/* Layout */
+	--navbar-height: 64px;
+}
+
+/* Mode sombre : appliquer sur html ou body -> data-theme="dark" */
+
+[data-theme="dark"] {
+	--color-bg: #050816;
+	--color-surface: #0b1220;
+	--color-surface-soft: #111827;
+
+	--color-primary: #38bdf8;
+	--color-primary-soft: #0f172a;
+	--color-primary-strong: #0ea5e9;
+
+	--color-accent: #4ade80;
+	--color-accent-soft: #052e16;
+
+	--color-danger: #f97373;
+	--color-danger-soft: #3f1c1d;
+
+	--color-text: #e5e7eb;
+	--color-text-soft: #9ca3af;
+	--color-border: #1f2937;
+
+	--shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* =====================
+   Reset & base
+   ===================== */
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	min-height: 100vh;
+	font-family: var(--font-main);
+	color: var(--color-text);
+	background: radial-gradient(circle at top left, #c4e1ff 0, transparent 50%),
+				radial-gradient(circle at bottom right, #b2f5ea 0, transparent 55%),
+				var(--color-bg);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.5rem;
+}
+
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	background:
+		radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.12) 0, transparent 55%),
+		radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.10) 0, transparent 55%);
+	mix-blend-mode: soft-light;
+	z-index: -1;
+}
+
+img, svg {
+	max-width: 100%;
+	display: block;
+}
+
+button, input, select, textarea {
+	font: inherit;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+}
+
+/* =====================
+   Conteneurs génériques
+   ===================== */
+
+.page-shell {
+	width: 100%;
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+.card-shell {
+	background-color: rgba(255, 255, 255, 0.80);
+	backdrop-filter: blur(20px);
+	border-radius: var(--radius-lg);
+	border: 1px solid rgba(255, 255, 255, 0.6);
+	box-shadow: var(--shadow-soft);
+	padding: 2rem 2.4rem;
+}
+
+[data-theme="dark"] .card-shell {
+	background-color: rgba(15, 23, 42, 0.96);
+	border-color: rgba(15, 23, 42, 0.95);
+}
+
+.page-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	margin-bottom: 2rem;
+}
+
+.page-header-title {
+	font-size: 1.6rem;
+	font-weight: 650;
+	letter-spacing: 0.02em;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+.page-header-title::before {
+	content: "";
+	width: 32px;
+	height: 32px;
+	border-radius: 999px;
+	background: conic-gradient(from 210deg, #1a73e8, #34d399, #1a73e8);
+	box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+.page-header-subtitle {
+	font-size: 0.9rem;
+	color: var(--color-text-soft);
+}
+
+/* =====================
+   Boutons
+   ===================== */
+
+.button,
+button {
+	border-radius: 999px;
+	border: 1px solid transparent;
+	padding: 0.6rem 1.2rem;
+	font-size: 0.95rem;
+	font-weight: 550;
+	letter-spacing: 0.02em;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+	cursor: pointer;
+	transition:
+		background-color var(--transition-med),
+		color var(--transition-med),
+		border-color var(--transition-med),
+		box-shadow var(--transition-med),
+		transform var(--transition-fast);
+	white-space: nowrap;
+}
+
+.button-primary,
+button[type="submit"] {
+	background: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
+	color: #ffffff;
+	box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+}
+
+.button-primary:hover,
+button[type="submit"]:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 16px 32px rgba(37, 99, 235, 0.45);
+}
+
+.button-secondary,
+button.secondary {
+	background-color: var(--color-surface-soft);
+	color: var(--color-primary-strong);
+	border-color: var(--color-border);
+}
+
+.button-secondary:hover,
+button.secondary:hover {
+	background-color: var(--color-primary-soft);
+}
+
+.button-ghost {
+	background: transparent;
+	color: var(--color-text-soft);
+	border-color: rgba(148, 163, 184, 0.5);
+}
+
+.button-ghost:hover {
+	color: var(--color-primary);
+	border-color: var(--color-primary);
+}
+
+.button-danger {
+	background-color: var(--color-danger);
+	color: #fff;
+}
+
+.button-danger:hover {
+	background-color: #c53030;
+}
+
+.button-small {
+	padding: 0.35rem 0.7rem;
+	font-size: 0.8rem;
+}
+
+.text-soft {
+	color: var(--color-text-soft);
+}
+
+/* Icône légère pour boutons (optionnelle) */
+
+.button::after,
+button::after {
+	content: "";
+	width: 6px;
+	height: 6px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.55);
+	display: inline-block;
+}
+
+.button-secondary::after,
+.button-ghost::after,
+.button-danger::after,
+button.secondary::after {
+	background: rgba(148, 163, 184, 0.7);
+}
+
+/* =====================
+   Champs de formulaire
+   ===================== */
+
+form {
+	margin: 0;
+}
+
+label {
+	display: block;
+	margin-bottom: 0.3rem;
+	font-size: 0.82rem;
+	font-weight: 550;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--color-text-soft);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="phone"],
+input[type="tel"],
+input[type="date"],
+textarea {
+	width: 100%;
+	padding: 0.7rem 0.85rem;
+	border-radius: var(--radius-md);
+	border: 1px solid var(--color-border);
+	background-color: rgba(255, 255, 255, 0.85);
+	color: var(--color-text);
+	font-size: 0.95rem;
+	outline: none;
+	transition:
+		border-color var(--transition-fast),
+		box-shadow var(--transition-fast),
+		background-color var(--transition-fast),
+		transform var(--transition-fast);
+}
+
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] input[type="phone"],
+[data-theme="dark"] input[type="tel"],
+[data-theme="dark"] input[type="date"],
+[data-theme="dark"] textarea {
+	background-color: #020617;
+}
+
+/* Select (combobox) - même style que les champs texte */
+
+select,
+.select-field {
+	width: 100%;
+	padding: 0.7rem 0.85rem;
+	border-radius: var(--radius-md);
+	border: 1px solid var(--color-border);
+	background-color: rgba(255, 255, 255, 0.85);
+	color: var(--color-text);
+	font-size: 0.95rem;
+	outline: none;
+	transition:
+		border-color var(--transition-fast),
+		box-shadow var(--transition-fast),
+		background-color var(--transition-fast),
+		transform var(--transition-fast);
+	appearance: none;
+	background-image: linear-gradient(45deg, transparent 50%, rgba(148,163,184,0.9) 50%),
+					linear-gradient(135deg, rgba(148,163,184,0.9) 50%, transparent 50%);
+	background-position: calc(100% - 14px) 50%, calc(100% - 8px) 50%;
+	background-size: 6px 6px, 6px 6px;
+	background-repeat: no-repeat;
+}
+
+/* Ajustements spécifiques pour le champ date dans les modals */
+
+.date-field {
+	background-color: rgba(255, 255, 255, 0.9);
+	border-radius: var(--radius-md);
+}
+
+.date-field::-webkit-calendar-picker-indicator {
+	filter: hue-rotate(180deg) saturate(1.2);
+	opacity: 0.9;
+	cursor: pointer;
+}
+
+.date-field::-webkit-inner-spin-button,
+.date-field::-webkit-clear-button {
+	display: none;
+}
+
+/* Pour certains navigateurs, harmoniser aussi la couleur du texte */
+.date-field::-webkit-datetime-edit-year-field,
+.date-field::-webkit-datetime-edit-month-field,
+.date-field::-webkit-datetime-edit-day-field {
+	color: var(--color-text);
+}
+
+[data-theme="dark"] select,
+[data-theme="dark"] .select-field {
+	background-color: #020617;
+}
+
+select:focus,
+.select-field:focus {
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.45);
+	transform: translateY(-0.5px);
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: rgba(148, 163, 184, 0.9);
+}
+
+input:focus,
+textarea:focus {
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.45);
+	transform: translateY(-0.5px);
+}
+
+input[readonly] {
+	background-color: var(--color-surface-soft);
+	color: var(--color-text-soft);
+}
+
+.field-group {
+	margin-bottom: 1rem;
+}
+
+.field-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.field-row > .field-group {
+	flex: 1 1 160px;
+}
+
+/* =====================
+   Liens
+   ===================== */
+
+a.link,
+form a,
+.back-link {
+	font-size: 0.9rem;
+	color: var(--color-primary-strong);
+	text-decoration: none;
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+a.link::after,
+form a::after,
+.back-link::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -0.2rem;
+	width: 100%;
+	height: 1px;
+	background: linear-gradient(90deg, var(--color-primary), transparent);
+	opacity: 0.7;
+	transform-origin: left;
+	transform: scaleX(0.15);
+	transition: transform var(--transition-med), opacity var(--transition-med);
+}
+
+a.link:hover::after,
+form a:hover::after,
+.back-link:hover::after {
+	transform: scaleX(1);
+	opacity: 1;
+}
+
+.back-link {
+	margin-top: 1.8rem;
+}
+
+.back-link::before {
+	content: "←";
+	font-size: 1rem;
+}
+
+/* =====================
+   Pages de connexion / inscription / MDP
+   ===================== */
+
+.login-container {
+	width: 100%;
+	max-width: 420px;
+}
+
+.form-login,
+.form-register,
+.form-example,
+.form-reset {
+	width: 100%;
+	max-width: 480px;
+	margin: 0 auto;
+	background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.10) 0, transparent 60%),
+				radial-gradient(circle at bottom left, rgba(45, 212, 191, 0.12) 0, transparent 65%),
+				var(--color-surface);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-soft);
+	padding: 2.1rem 2.3rem 2.2rem;
+	border: 1px solid rgba(255, 255, 255, 0.75);
+	position: relative;
+	overflow: hidden;
+}
+
+[data-theme="dark"] .form-login,
+[data-theme="dark"] .form-register,
+[data-theme="dark"] .form-example,
+[data-theme="dark"] .form-reset {
+	border-color: rgba(15, 23, 42, 0.95);
+}
+
+.form-login::before,
+.form-register::before,
+.form-example::before,
+.form-reset::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image:
+		repeating-linear-gradient(45deg, rgba(148, 163, 184, 0.06) 0, rgba(148, 163, 184, 0.06) 1px, transparent 1px, transparent 18px);
+	opacity: 0.8;
+	pointer-events: none;
+}
+
+.form-login > *,
+.form-register > *,
+.form-example > *,
+.form-reset > * {
+	position: relative;
+	z-index: 1;
+}
+
+.form-login .title,
+.form-register > p:first-child,
+.form-example > p:first-child,
+.form-reset > p:first-child {
+	font-size: 1.5rem;
+	font-weight: 650;
+	margin-bottom: 0.8rem;
+}
+
+.description-container {
+	margin-bottom: 1.4rem;
+}
+
+.sub-title {
+	font-size: 0.9rem;
+	line-height: 1.5;
+	color: var(--color-text-soft);
+}
+
+.form-login .email,
+.form-login .password,
+.form-register .email,
+.form-register .password,
+.form-example .email,
+.form-reset .email,
+.form-reset .password {
+	margin-bottom: 1rem;
+}
+
+.action-container {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 1.4rem;
+}
+
+.action-container .button,
+.action-container .button-secondary {
+	flex: 1 1 140px;
+	justify-content: center;
+}
+
+.form-login .link {
+	display: inline-block;
+	margin-top: 0.2rem;
+}
+
+/* =====================
+   Tableau de bord / liste des patients
+   ===================== */
+
+body.dashboard-page {
+	align-items: stretch;
+}
+
+body.dashboard-page > .page-shell {
+	height: 100%;
+}
+
+/* Layout simple pour dashboard, profil, etc. */
+
+.layout-board {
+	display: flex;
+	flex-direction: column;
+	gap: 1.6rem;
+}
+
+.board-main-card {
+	background-color: var(--color-surface);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-soft);
+	padding: 1.5rem 1.5rem 1.8rem;
+}
+
+.board-main-card > p:first-child {
+	font-size: 1.3rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+	border-radius: var(--radius-md);
+	overflow: hidden;
+	box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.35);
+	background-color: rgba(255, 255, 255, 0.96);
+}
+
+[data-theme="dark"] table {
+	background-color: rgba(15, 23, 42, 0.96);
+	box-shadow: 0 0 0 1px rgba(30, 64, 175, 0.6);
+}
+
+th, td {
+	padding: 0.7rem 0.9rem;
+	text-align: left;
+}
+
+th {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--color-text-soft);
+	background: linear-gradient(90deg, var(--color-surface-soft), transparent);
+	border-bottom: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+tr:nth-child(even) td {
+	background-color: rgba(248, 250, 252, 0.9);
+}
+
+[data-theme="dark"] tr:nth-child(even) td {
+	background-color: rgba(15, 23, 42, 0.9);
+}
+
+tr.clickable-row {
+	cursor: pointer;
+	transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+tr.clickable-row:hover td {
+	background-color: rgba(219, 234, 254, 0.85);
+}
+
+[data-theme="dark"] tr.clickable-row:hover td {
+	background-color: rgba(30, 64, 175, 0.55);
+}
+
+/* Boutons d’action dashboard */
+
+.board-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 1.4rem;
+}
+
+.board-actions button {
+	flex: 1 1 180px;
+}
+
+.board-header-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+}
+
+.board-header-actions .button {
+	min-width: 180px;
+}
+
+/* =====================
+   Profil patient
+   ===================== */
+
+.profil-container {
+	width: 100%;
+	max-width: 720px;
+	background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.12) 0, transparent 65%),
+				var(--color-surface);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-soft);
+	padding: 2rem 2.2rem 2.3rem;
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	margin: 0 auto;
+}
+
+[data-theme="dark"] .profil-container {
+	border-color: rgba(15, 23, 42, 0.95);
+}
+
+.profil-info {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 0.7rem 1.5rem;
+	margin-bottom: 1.4rem;
+	padding: 0.9rem 1rem;
+	border-radius: var(--radius-md);
+	background-color: rgba(248, 250, 252, 0.85);
+}
+
+[data-theme="dark"] .profil-info {
+	background-color: rgba(15, 23, 42, 0.9);
+}
+
+.profil-info p {
+	font-size: 0.92rem;
+}
+
+.profil-info strong {
+	color: var(--color-text-soft);
+}
+
+.profil-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.7rem;
+	margin-bottom: 1.6rem;
+}
+
+.profil-actions button {
+	flex: 1 1 180px;
+}
+
+.profil-container > p {
+	margin-top: 1rem;
+	font-weight: 550;
+}
+
+.profil-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1.2rem;
+	margin-bottom: 1.4rem;
+}
+
+.profil-header h2 {
+	font-size: 1.6rem;
+	margin-bottom: 0.25rem;
+}
+
+.profil-subtitle {
+	font-size: 0.9rem;
+	color: var(--color-text-soft);
+}
+
+.profil-lists {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-top: 1.4rem;
+}
+
+.profil-list-card {
+	padding: 1rem 1.1rem 1.2rem;
+	border-radius: var(--radius-md);
+	background-color: rgba(248, 250, 252, 0.9);
+	border: 1px dashed rgba(148, 163, 184, 0.7);
+}
+
+[data-theme="dark"] .profil-list-card {
+	background-color: rgba(15, 23, 42, 0.9);
+	border-color: rgba(55, 65, 81, 0.9);
+}
+
+.profil-list-card h3 {
+	font-size: 1rem;
+	margin-bottom: 0.4rem;
+}
+
+.profil-list-empty {
+	font-size: 0.85rem;
+	color: var(--color-text-soft);
+}
+
+/* =====================
+   Dialogs (modals) : ajout patient / prestation
+   ===================== */
+
+dialog {
+	border: none;
+	padding: 0;
+	border-radius: var(--radius-lg);
+	max-width: 480px;
+	width: 100%;
+	background:
+		radial-gradient(circle at top right, rgba(59, 130, 246, 0.10) 0, transparent 60%),
+		radial-gradient(circle at bottom left, rgba(45, 212, 191, 0.12) 0, transparent 65%),
+		var(--color-surface);
+	box-shadow: var(--shadow-soft);
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	overflow: hidden;
+}
+
+/* Modal de génération de facture : un peu plus large que les autres */
+dialog#modalSelectConsult {
+	max-width: 780px;
+}
+
+dialog::backdrop {
+	background: radial-gradient(circle at top, rgba(37, 99, 235, 0.4) 0, transparent 55%),
+				rgba(15, 23, 42, 0.7);
+	backdrop-filter: blur(4px);
+}
+
+dialog > form,
+dialog > div,
+dialog > p {
+	margin: 0;
+}
+
+dialog > p:first-child {
+	padding: 1.4rem 1.6rem 0.7rem;
+	font-weight: 650;
+	font-size: 1.1rem;
+}
+
+dialog .nom,
+dialog .email,
+dialog .phone,
+dialog .address,
+dialog .name,
+dialog .description,
+dialog .price {
+	padding: 0 1.6rem 0.7rem;
+}
+
+dialog button {
+	margin: 0.8rem 1.6rem 1.4rem;
+}
+
+dialog button + button {
+	margin-left: 0.4rem;
+}
+
+/* Modal génération facture */
+
+.modal-invoice {
+	padding: 1.4rem 1.6rem 1.6rem;
+}
+
+.modal-title {
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin-bottom: 0.25rem;
+}
+
+.modal-subtitle {
+	font-size: 0.9rem;
+	color: var(--color-text-soft);
+	margin-bottom: 1.1rem;
+}
+
+.modal-invoice-header h3 {
+	margin: 0 0 0.3rem 0;
+	font-size: 1.2rem;
+}
+
+.modal-invoice-subtitle {
+	margin: 0;
+	font-size: 0.9rem;
+	color: var(--color-text-soft);
+}
+
+.modal-invoice-body {
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.modal-invoice-table table {
+	width: 100%;
+}
+
+.modal-invoice-summary {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+}
+
+.modal-invoice-totals {
+	padding: 0.7rem 0.8rem;
+	border-radius: var(--radius-md);
+	background-color: rgba(248, 250, 252, 0.9);
+	border: 1px dashed rgba(148, 163, 184, 0.7);
+	font-size: 0.9rem;
+}
+
+.modal-invoice-totals p {
+	margin: 0.15rem 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+}
+
+.modal-invoice-totals p .amount {
+	min-width: 5.5rem;
+	text-align: right;
+	display: inline-block;
+}
+
+.modal-invoice-totals p .amount-strong {
+	font-weight: 600;
+}
+
+.modal-invoice-footer {
+	margin-top: 1.2rem;
+	justify-content: flex-end;
+}
+
+.modal-actions {
+	margin-top: 1.3rem;
+	justify-content: flex-end;
+}
+
+/* =====================
+   Responsivité
+   ===================== */
+
+@media (max-width: 768px) {
+	body {
+		padding: 1.1rem;
+	}
+
+	.form-login,
+	.form-register,
+	.form-example,
+	.form-reset {
+		padding: 1.6rem 1.4rem 1.7rem;
+		border-radius: 16px;
+	}
+
+	.page-header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	table,
+	th,
+	td {
+		font-size: 0.8rem;
+	}
+
+	th,
+	td {
+		padding: 0.5rem 0.6rem;
+	}
+
+	.profil-container {
+		padding: 1.6rem 1.35rem 1.8rem;
+	}
+}
+
+@media (max-width: 480px) {
+	body {
+		padding: 0.8rem;
+	}
+
+	.form-login,
+	.form-register,
+	.form-example,
+	.form-reset {
+		padding: 1.4rem 1.1rem 1.5rem;
+	}
+
+	.form-login .title,
+	.form-register > p:first-child,
+	.form-example > p:first-child,
+	.form-reset > p:first-child {
+		font-size: 1.3rem;
+	}
+
+	.action-container {
+		flex-direction: column;
+	}
+
+	.action-container .button,
+	.action-container .button-secondary {
+		width: 100%;
+		flex: 0 0 auto;
+	}
+
+	.profil-actions button,
+	.board-actions button,
+	.board-header-actions .button {
+		flex: 1 1 100%;
+	}
+}
+
+/* =====================
+   Utilitaires
+   ===================== */
+
+.text-danger {
+	color: var(--color-danger);
+}
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.15rem 0.6rem;
+	border-radius: 999px;
+	font-size: 0.75rem;
+	background-color: var(--color-primary-soft);
+	color: var(--color-primary-strong);
+}
+
+.badge-admin {
+	background-color: var(--color-accent-soft);
+	color: var(--color-accent);
+}
+
+.badge-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 999px;
+	background-color: var(--color-primary-strong);
+}
+
+.badge-admin .badge-dot {
+	background-color: var(--color-accent);
+}
+
+.pill {
+	border-radius: 999px;
+	padding: 0.25rem 0.7rem;
+	font-size: 0.75rem;
+	background: var(--color-accent-soft);
+	color: var(--color-accent);
+}
+
+.pill-success {
+	background: var(--color-accent-soft);
+	color: var(--color-accent);
+}
+
+.pill-pending {
+	background: rgba(251, 191, 36, 0.15);
+	color: #d97706;
+}
+
+/* =====================
+   Factures (invoice)
+   ===================== */
+
+.invoice-container {
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	background: radial-gradient(circle at top right, rgba(59,130,246,0.12) 0, transparent 60%),
+				var(--color-surface);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-soft);
+	padding: 1.8rem 2rem 2.1rem;
+	border: 1px solid rgba(255,255,255,0.85);
+}
+
+[data-theme="dark"] .invoice-container {
+	border-color: rgba(15,23,42,0.95);
+}
+
+.invoice-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 1.2rem;
+	margin-bottom: 1.4rem;
+}
+
+.invoice-header h1 {
+	margin: 0 0 0.25rem 0;
+	font-size: 1.6rem;
+}
+
+.invoice-subtitle {
+	font-size: 0.9rem;
+	color: var(--color-text-soft);
+}
+
+.invoice-meta {
+	text-align: right;
+	font-size: 0.85rem;
+	color: var(--color-text-soft);
+}
+
+.invoice-date {
+	margin-top: 0.25rem;
+}
+
+.invoice-identities {
+	display: grid;
+	grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+	gap: 1rem;
+	margin-bottom: 1.4rem;
+}
+
+.invoice-block {
+	padding: 0.9rem 1rem;
+	border-radius: var(--radius-md);
+	background-color: rgba(248,250,252,0.9);
+}
+
+[data-theme="dark"] .invoice-block {
+	background-color: rgba(15,23,42,0.9);
+}
+
+.invoice-block h2 {
+	margin: 0 0 0.4rem 0;
+	font-size: 1rem;
+}
+
+.invoice-name {
+	font-weight: 600;
+}
+
+.invoice-address {
+	font-size: 0.9rem;
+	color: var(--color-text-soft);
+}
+
+.invoice-lines {
+	margin-top: 0.6rem;
+}
+
+.invoice-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+	border-radius: var(--radius-md);
+	overflow: hidden;
+	box-shadow: 0 0 0 1px rgba(148,163,184,0.35);
+	background-color: rgba(255,255,255,0.96);
+}
+
+[data-theme="dark"] .invoice-table {
+	background-color: rgba(15,23,42,0.96);
+	box-shadow: 0 0 0 1px rgba(30,64,175,0.6);
+}
+
+.invoice-table th,
+.invoice-table td {
+	padding: 0.6rem 0.8rem;
+	text-align: left;
+}
+
+.invoice-table th {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--color-text-soft);
+	background: linear-gradient(90deg,var(--color-surface-soft),transparent);
+	border-bottom: 1px solid rgba(148,163,184,0.6);
+}
+
+.invoice-table tr:nth-child(even) td {
+	background-color: rgba(248,250,252,0.9);
+}
+
+[data-theme="dark"] .invoice-table tr:nth-child(even) td {
+	background-color: rgba(15,23,42,0.9);
+}
+
+.invoice-amount {
+	white-space: nowrap;
+}
+
+.invoice-amount-strong {
+	font-weight: 650;
+	font-size: 1.05rem;
+}
+
+.invoice-summary {
+	margin-top: 1.2rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 0.4rem;
+}
+
+.invoice-summary-row {
+	min-width: 220px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.7rem 0.9rem;
+	border-radius: var(--radius-md);
+	background-color: rgba(248,250,252,0.9);
+	border: 1px dashed rgba(148,163,184,0.7);
+}
+
+[data-theme="dark"] .invoice-summary-row {
+	background-color: rgba(15,23,42,0.9);
+	border-color: rgba(55,65,81,0.9);
+}
+
+.invoice-note {
+	margin-top: 0.35rem;
+	font-size: 0.8rem;
+	color: var(--color-text-soft);
+	text-align: right;
+}
+
+@media (max-width: 768px) {
+	.invoice-container {
+		padding: 1.5rem 1.4rem 1.8rem;
+	}
+
+
+/* =====================
+   Feedback (succès / erreur)
+   ===================== */
+
+.success-message,
+.error-message {
+	max-width: 520px;
+	margin: 2.5rem auto;
+	padding: 1.8rem 2rem 2.1rem;
+	border-radius: var(--radius-lg);
+	background-color: var(--color-surface);
+	box-shadow: var(--shadow-soft);
+	border: 1px solid rgba(255,255,255,0.8);
+	text-align: center;
+}
+
+[data-theme="dark"] .success-message,
+[data-theme="dark"] .error-message {
+	border-color: rgba(15,23,42,0.95);
+}
+
+.feedback-icon {
+	width: 44px;
+	height: 44px;
+	border-radius: 999px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 0.8rem;
+	font-size: 1.4rem;
+}
+
+.feedback-icon-success {
+	background-color: var(--color-accent-soft);
+	color: var(--color-accent);
+}
+
+.feedback-icon-error {
+	background-color: var(--color-danger-soft);
+	color: var(--color-danger);
+}
+
+/* Carte de feedback (succès / erreur) */
+
+.feedback-card {
+	background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.10) 0, transparent 60%),
+				radial-gradient(circle at bottom left, rgba(45, 212, 191, 0.12) 0, transparent 65%),
+				var(--color-surface);
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-soft);
+	padding: 2rem 2.2rem 2.3rem;
+	border: 1px solid rgba(255, 255, 255, 0.75);
+	text-align: center;
+}
+
+[data-theme="dark"] .feedback-card {
+	border-color: rgba(15, 23, 42, 0.95);
+}
+
+.feedback-success {
+	border-left: 4px solid var(--color-accent);
+}
+
+.feedback-error {
+	border-left: 4px solid var(--color-danger);
+}
+
+.feedback-card .action-container {
+	justify-content: center;
+	margin-top: 1.4rem;
+}
+
+.feedback-main {
+	font-size: 1rem;
+	margin-bottom: 0.4rem;
+}
+
+.feedback-subtext {
+	font-size: 0.9rem;
+	color: var(--color-text-soft);
+}
+	.invoice-header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.invoice-meta {
+		text-align: left;
+	}
+}
+
+/* =====================
+   Messages succès / erreur
+   ===================== */
+
+.feedback-message {
+	width: 100%;
+	max-width: 520px;
+	margin: 0 auto;
+	padding: 1.3rem 1.5rem 1.4rem;
+	border-radius: var(--radius-lg);
+	box-shadow: var(--shadow-soft);
+	background-color: var(--color-surface);
+	border: 1px solid var(--color-border);
+	display: flex;
+	flex-direction: column;
+	gap: 0.8rem;
+	text-align: left;
+}
+
+.feedback-message p {
+	font-size: 0.96rem;
+}
+
+.feedback-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
+}
+
+.feedback-actions .button,
+.feedback-actions a.button {
+	flex: 1 1 160px;
+	justify-content: center;
+}
+
+.feedback-error {
+	background: linear-gradient(135deg, rgba(248, 113, 113, 0.12), transparent),
+		var(--color-surface);
+	border-color: var(--color-danger);
+}
+
+.feedback-error p {
+	color: var(--color-danger);
+	font-weight: 550;
+}
+
+.feedback-success {
+	background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), transparent),
+		var(--color-surface);
+	border-color: var(--color-primary);
+}
+
+.feedback-success p {
+	color: var(--color-primary-strong);
+	font-weight: 550;
+}
+
+@media (max-width: 480px) {
+	.feedback-message {
+		padding: 1.1rem 1.1rem 1.2rem;
+	}
+
+	.feedback-actions .button,
+	.feedback-actions a.button {
+		flex: 1 1 100%;
+	}
+}
+

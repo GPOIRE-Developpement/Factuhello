@@ -19,6 +19,8 @@ use guillaumepaquin\factuhello\action\GenerateInvoiceAction;
 use guillaumepaquin\factuhello\action\DownloadPdfAction;
 use guillaumepaquin\factuhello\action\DownloadInvoiceAction;
 use guillaumepaquin\factuhello\action\ResendInvoiceAction;
+use guillaumepaquin\factuhello\action\DeleteConsultationAction;
+use guillaumepaquin\factuhello\action\AdminAction;
 use guillaumepaquin\factuhello\action\LogoutAction;
 
 /**
@@ -49,6 +51,8 @@ class Dispatcher{
             "download-pdf" => DownloadPdfAction::class,
             "download-invoice" => DownloadInvoiceAction::class,
             "resend-invoice" => ResendInvoiceAction::class,
+            "delete-consultation" => DeleteConsultationAction::class,
+            "admin" => AdminAction::class,
             "logout" => LogoutAction::class
         );
 
@@ -81,9 +85,9 @@ class Dispatcher{
                 return;
             }
             
-            $this->renderPage($objA::execute());
+            $this->renderPage($objA::execute(), $action);
         } else {
-            $this->renderPage((new DefaultAction())->execute());
+            $this->renderPage((new DefaultAction())->execute(), 'default');
         }
     }
 
@@ -91,7 +95,40 @@ class Dispatcher{
      * Construit et affiche la page complète
      * @param string $html Contenu HTML à afficher
      */
-    private function renderPage($html): void{
-        echo PageRenderer::render($html);
+    private function renderPage($html, string $action): void{
+        $title = 'Factuhello';
+        $bodyClass = '';
+
+        switch ($action) {
+            case 'login':
+                $title = 'Factuhello - Connexion';
+                break;
+            case 'register':
+                $title = 'Factuhello - Inscription';
+                break;
+            case 'forgot':
+                $title = 'Factuhello - Mot de passe oublié';
+                break;
+            case 'reset':
+                $title = 'Factuhello - Réinitialisation';
+                break;
+            case 'dashboard':
+                $title = 'Factuhello - Tableau de bord';
+                $bodyClass = 'dashboard-page';
+                break;
+            case 'profil':
+                $title = 'Factuhello - Profil Patient';
+                $bodyClass = 'dashboard-page';
+                break;
+            case 'admin':
+                $title = 'Factuhello - Administration';
+                $bodyClass = 'dashboard-page';
+                break;
+            default:
+                $title = 'Factuhello';
+                break;
+        }
+
+        echo PageRenderer::render($html, $title, $bodyClass);
     }
 }

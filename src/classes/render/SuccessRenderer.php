@@ -12,11 +12,18 @@ class SuccessRenderer {
      */
     public static function render($message, $return): string {
         return <<<HTML
-            <div class="success-message">
-                <p>{$message}</p>
-                <a href="{$return}">Continuer</a>
-            </div>
-        HTML;
+<div class="login-container">
+    <div class="form-login">
+        <p class="title">Succès</p>
+        <div class="description-container">
+            <p class="sub-title">{$message}</p>
+        </div>
+        <div class="action-container">
+            <a href="{$return}" class="button button-primary">Continuer</a>
+        </div>
+    </div>
+</div>
+HTML;
     }
 
     /**
@@ -30,17 +37,23 @@ class SuccessRenderer {
     public static function renderWithDownload($message, $emailMessage, $downloadUrl, $return): string {
         $downloadButton = '';
         if ($downloadUrl) {
-            $downloadButton = '<a href="' . $downloadUrl . '" class="download-btn" style="display: inline-block; margin: 10px; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">📄 Télécharger la facture PDF</a>';
+            $downloadButton = '<a href="' . $downloadUrl . '" class="button button-secondary">Télécharger la facture PDF</a>';
         }
-        
+
         return <<<HTML
-            <div class="success-message">
-                <p>{$message}</p>
-                <p>{$emailMessage}</p>
-                {$downloadButton}
-                <br><br>
-                <a href="{$return}">Retour au profil</a>
-            </div>
-        HTML;
+<div class="login-container">
+    <div class="form-login">
+        <p class="title">Succès</p>
+        <div class="description-container">
+            <p class="sub-title">{$message}</p>
+            <p class="sub-title">{$emailMessage}</p>
+        </div>
+        <div class="action-container">
+            {$downloadButton}
+            <a href="{$return}" class="button button-primary">Retour au profil</a>
+        </div>
+    </div>
+</div>
+HTML;
     }
 }

@@ -2,6 +2,8 @@
 
 namespace guillaumepaquin\factuhello\render;
 
+use guillaumepaquin\factuhello\model\AccountModel;
+
 /**
  * Classe responsable du rendu des pages
  */
@@ -14,10 +16,29 @@ class DashboardRenderer {
         $patientModal = AddPatientRenderer::render();
         $benefitModal = AddBenefitRenderer::render();
 
+        // Bouton admin seulement pour les administrateurs
+        $adminButton = '';
+        if (AccountModel::isAdmin()) {
+            $adminButton = '<a href="?action=admin" class="button button-secondary">⚙ Administration</a>';
+        }
+
         return <<<HTML
-            <div>
-                <a href="?action=logout">🚪 Déconnexion</a>
-            </div>
+<div class="page-shell">
+    <header class="page-header">
+        <div>
+            <h1 class="page-header-title">Tableau de bord</h1>
+            <p class="page-header-subtitle">Vue d'ensemble de vos patients et prestations</p>
+        </div>
+        <div class="board-header-actions">
+            <button type="button" class="button button-primary" onclick="modalPatient.showModal()">Ajouter un patient</button>
+            <button type="button" class="button button-secondary" onclick="modalBenefit.showModal()">Ajouter une prestation</button>
+            $adminButton
+            <a href="?action=logout" class="button button-ghost">Déconnexion</a>
+        </div>
+    </header>
+
+    <main class="layout-board">
+        <section class="board-main-card">
             <p>Liste des patients</p>
             <table>
                 <tr>
@@ -30,23 +51,26 @@ class DashboardRenderer {
                 </tr>
                 $patients
             </table>
-            
-            $patientModal
+        </section>
+    </main>
+</div>
 
-            $benefitModal
-        HTML;
+$patientModal
+
+$benefitModal
+HTML;
     }
 
     public static function renderPatient($id, $email, $name, $phone, $address, $nbC, $nbF):string{
         return <<<HTML
-            <tr class="clickable-row" onclick="window.location='?action=profil&id={$id}'">
-                <td>$email</td>
-                <td>$name</td>
-                <td>$phone</td>
-                <td>$address</td>
-                <td>$nbC</td>
-                <td>$nbF</td>
-            </tr>
-        HTML;
+<tr class="clickable-row" onclick="window.location='?action=profil&id={$id}'">
+    <td>$email</td>
+    <td>$name</td>
+    <td>$phone</td>
+    <td>$address</td>
+    <td>$nbC</td>
+    <td>$nbF</td>
+</tr>
+HTML;
     }
 }

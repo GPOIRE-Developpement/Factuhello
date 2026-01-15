@@ -12,24 +12,29 @@ class LoginRenderer {
      */
     public static function render(): string {
         return <<<HTML
-            <form action="?action=login" method="POST" class="form-login">
-                <p>Connexion<p>
+<div class="login-container">
+    <form action="?action=login" method="POST" class="form-login">
+        <p class="title">Connexion</p>
+        <div class="description-container">
+            <p class="sub-title">Bienvenue sur Factuhello qui permet à un praticient de rédiger ses factures et de suivre ses patients simplement.</p>
+        </div>
 
-                <div class="email">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
+        <div class="email">
+            <input type="email" id="email" name="email" placeholder="Email" required>
+        </div>
 
-                <div class="password">
-                    <label for="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
+        <div class="password">
+            <input type="password" id="password" name="password" placeholder="Mot de passe" required>
+        </div>
 
-                <a href="?action=forgot">Mot de passe oublié ?</a>
+        <a class="link" href="?action=forgot">Mot de passe oublié ?</a>
 
-                <button type="submit">Se connecter</button>
-                <a href="?action=register">S'inscrire</button>
-            </form>
-        HTML;
+        <div class="action-container">
+            <button type="submit" class="button button-primary">Se connecter</button>
+            <a href="?action=register" class="button button-secondary">S'inscrire</a>
+        </div>
+    </form>
+</div>
+HTML;
     }
 }

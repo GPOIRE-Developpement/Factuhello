@@ -14,22 +14,22 @@ class ForgotRenderer
     public static function render(): string
     {
         return <<<HTML
-            <form action="?action=forgot" method="POST" class="form-example">
-                <p>Mot de passe oublié<p>
+<form action="?action=forgot" method="POST" class="form-example">
+    <p>Mot de passe oublié</p>
 
-                <div class="email">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
+    <div class="email">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+    </div>
 
-                <div class="email">
-                    <label for="confirm-email">Email</label>
-                    <input type="email" id="confirm-email" name="confirm-email" required>
-                </div>
+    <div class="email">
+        <label for="confirm-email">Confirmer Email</label>
+        <input type="email" id="confirm-email" name="confirm-email" required>
+    </div>
 
-                <button type="submit">Réinitialiser</button>
-                <a href="?action=default">Retour</button>
-            </form>
-        HTML;
+    <button type="submit" class="button button-primary">Réinitialiser</button>
+    <a href="?action=login" class="link">Retour</a>
+</form>
+HTML;
     }
 }

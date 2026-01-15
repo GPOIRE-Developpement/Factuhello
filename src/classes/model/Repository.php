@@ -52,10 +52,20 @@ class Repository {
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 email VARCHAR(190) UNIQUE NOT NULL,
                 password_hash VARCHAR(190) NOT NULL,
+                role ENUM('admin', 'user') DEFAULT 'user',
+                is_approved TINYINT(1) DEFAULT 0,
                 reset_token VARCHAR(190),
                 reset_token_expiry DATETIME
             );
         ");
+
+        // Ajouter les colonnes role et is_approved si elles n'existent pas (pour BDD existantes)
+        try {
+            $this->pdo->exec("ALTER TABLE users ADD COLUMN role ENUM('admin', 'user') DEFAULT 'user'");
+        } catch (\PDOException $e) {}
+        try {
+            $this->pdo->exec("ALTER TABLE users ADD COLUMN is_approved TINYINT(1) DEFAULT 0");
+        } catch (\PDOException $e) {}
 
         $this->pdo->exec("
             CREATE TABLE IF NOT EXISTS patients (

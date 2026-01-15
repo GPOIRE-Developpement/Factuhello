@@ -28,64 +28,117 @@ class ProfilRenderer {
         $addConsultationModal = AddConsultationRenderer::render($id);
         $selectConsultModal = SelectConsultRenderer::render($id);
 
+        // Bloc consultations : table complète seulement s'il y a des lignes
+        if ($consultations !== "") {
+            $consultationsBlock = <<<HTML
+                        <div class="profil-list-card">
+                            <h3>Consultations</h3>
+                            <table>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Description</th>
+                                    <th>Date</th>
+                                    <th>Facturée</th>
+                                    <th>Action</th>
+                                </tr>
+                                $consultations
+                            </table>
+                        </div>
+            HTML;
+        } else {
+            $consultationsBlock = <<<HTML
+                        <div class="profil-list-card">
+                            <h3>Consultations</h3>
+                            <p class="profil-list-empty">Aucune consultation enregistrée pour le moment.</p>
+                        </div>
+            HTML;
+        }
+
+        // Bloc factures : table complète seulement s'il y a des lignes
+        if ($invoices !== "") {
+            $invoicesBlock = <<<HTML
+                        <div class="profil-list-card">
+                            <h3>Factures</h3>
+                            <table>
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Montant Total</th>
+                                    <th>Date</th>
+                                    <th>Nb Consultations</th>
+                                    <th>Action</th>
+                                </tr>
+                                $invoices
+                            </table>
+                        </div>
+            HTML;
+        } else {
+            $invoicesBlock = <<<HTML
+                        <div class="profil-list-card">
+                            <h3>Factures</h3>
+                            <p class="profil-list-empty">Aucune facture disponible pour ce patient.</p>
+                        </div>
+            HTML;
+        }
+
         return <<<HTML
-            <div class="profil-container">
-                <h2>Profil du patient</h2>
-                
-                <div class="profil-info">
-                    <p><strong>Id:</strong>$id</p>
-                    <p><strong>Email:</strong>$email</p>
-                    <p><strong>Nom - Prénom:</strong>$name</p>
-                    <p><strong>Téléphone:</strong>$phone</p>
-                    <p><strong>Adresse:</strong>$address</p>
-                    <p><strong>Nb consultations:</strong>$nbC</p>
-                    <p><strong>Nb factures:</strong>$nbF</p>
-                    <p><strong>Consultations non facturées:</strong> $nbUnbilled</p>
+            <div class="page-shell">
+                <div class="profil-container">
+                    <header class="profil-header">
+                        <div>
+                            <h2>Profil du patient</h2>
+                            <p class="profil-subtitle">Synthèse des informations et historique de suivi</p>
+                        </div>
+                        <span class="badge">
+                            <span class="badge-dot"></span>
+                            Patient
+                        </span>
+                    </header>
+                    
+                    <section class="profil-info">
+                        <p><strong>Id:</strong> $id</p>
+                        <p><strong>Email:</strong> $email</p>
+                        <p><strong>Nom - Prénom:</strong> $name</p>
+                        <p><strong>Téléphone:</strong> $phone</p>
+                        <p><strong>Adresse:</strong> $address</p>
+                        <p><strong>Nb consultations:</strong> $nbC</p>
+                        <p><strong>Nb factures:</strong> $nbF</p>
+                        <p><strong>Consultations non facturées:</strong> $nbUnbilled</p>
+                    </section>
+
+                    <section class="profil-actions">
+                        $editPatientModal
+                        $removePatientModal
+                        $addConsultationModal
+                        $selectConsultModal
+                    </section>
+
+                    <section class="profil-lists" style="display:flex;flex-direction:column;gap:1rem;">
+                        $consultationsBlock
+
+                        $invoicesBlock
+                    </section>
+                    
+                    <a href="?action=dashboard" class="back-link">Retour à la liste des patients</a>
                 </div>
-
-                <div class="profil-actions">
-                    $editPatientModal
-                    $removePatientModal
-                    $addConsultationModal
-                    $selectConsultModal
-                </div>
-
-                <p>Liste des consultations</p>
-                <table>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Description</th>
-                        <th>Date</th>
-                        <th>Facturée</th>
-                        <th>Action</th>
-                    </tr>
-                    $consultations
-                </table>
-
-                <p>List des factures</p>
-                <table>
-                    <tr>
-                        <th>Numéro</th>
-                        <th>Montant Total</th>
-                        <th>Date</th>
-                        <th>Nb Consultations</th>
-                        <th>Action</th>
-                    </tr>
-                    $invoices
-                </table>
-                
-                <a href="?action=dashboard" class="back-link">← Retour à la liste des patients</a>
             </div>
         HTML;
     }
 
-    public static function renderConsultation($id, $name, $time, $benefitName):string{
+    public static function renderConsultation($id, $name, $date, $isBilled, $patientId):string{
+        $billedText = $isBilled ? 'Oui' : 'Non';
+        $deleteButton = '';
+        if (!$isBilled) {
+            $deleteButton = '<a href="?action=delete-consultation&id=' . $id . '&patient=' . $patientId . '" class="button button-danger button-small" onclick="return confirm(\'Êtes-vous sûr de vouloir supprimer cette consultation ?\');">🗑 Supprimer</a>';
+        } else {
+            $deleteButton = '<span class="text-soft">—</span>';
+        }
         return <<<HTML
             <tr>
                 <td>$name</td>
-                <td>$time</td>
-                <td>Oui</td>
-                <td>$benefitName</td>
+                <td>$name</td>
+                <td>$date</td>
+                <td>$billedText</td>
+                <td>$deleteButton</td>
             </tr>
         HTML;
     }
@@ -98,8 +151,14 @@ class ProfilRenderer {
                 <td>$createdAt</td>
                 <td>$nbConsultations</td>
                 <td>
-                    <a href="?action=download-invoice&id=$id">Télécharger</a>
-                    <a href="?action=resend-invoice&id=$id&patient=$patientId">Renvoyer par mail</a>
+                    <div class="action-container">
+                        <a href="?action=download-invoice&id=$id" class="button button-secondary" title="Télécharger la facture">
+                            ⬇ Télécharger
+                        </a>
+                        <a href="?action=resend-invoice&id=$id&patient=$patientId" class="button button-primary" title="Renvoyer la facture par mail">
+                            ✉ Renvoyer
+                        </a>
+                    </div>
                 </td>
             </tr>
         HTML;

@@ -138,7 +138,8 @@ class PatientModel {
         $consultations = "";
 
         try{
-            $stmt = $pdo->prepare("SELECT c.id, c.date, b.name as benefit_name, b.price as benefit_price
+            $stmt = $pdo->prepare("SELECT c.id, c.date, b.name as benefit_name, b.price as benefit_price,
+                CASE WHEN EXISTS (SELECT 1 FROM invoice_consultations ic WHERE ic.consultation_id = c.id) THEN 1 ELSE 0 END as is_billed
                 FROM consultations c
                 INNER JOIN benefits b ON c.benefit_id = b.id
                 WHERE c.patient_id = :patient_id
@@ -152,13 +153,14 @@ class PatientModel {
                     $row['id'],
                     $row['benefit_name'],
                     $row['date'],
-                    $row['benefit_name']
+                    $row['is_billed'],
+                    $patientId
                 );
             }
 
             return $consultations;
         }catch(\PDOException $e){
-            return [];
+            return "";
         }
     }
 
@@ -256,6 +258,34 @@ class PatientModel {
             return SuccessRenderer::render("Patient supprimé avec succès.", "?action=dashboard");
         }catch(\PDOException $e){
             return ErrorRenderer::render("Erreur lors de la suppression du patient : erreur de base de données.", $url);
+        }
+    }
+
+    public static function deleteConsultation($consultationId, $patientId): string {
+        $pdo = Repository::getInstance()->getPdo();
+
+        $url = "?action=dashboard";
+        if (isset($patientId)) {
+            $url = "?action=profil&id=" . urlencode($patientId);
+        }
+
+        try {
+            // Vérifier que la consultation n'est pas facturée
+            $stmt = $pdo->prepare("SELECT COUNT(*) as is_billed FROM invoice_consultations WHERE consultation_id = :id");
+            $stmt->execute([':id' => $consultationId]);
+            $row = $stmt->fetch();
+
+            if ($row['is_billed'] > 0) {
+                return ErrorRenderer::render("Impossible de supprimer une consultation déjà facturée.", $url);
+            }
+
+            // Supprimer la consultation
+            $stmt = $pdo->prepare("DELETE FROM consultations WHERE id = :id");
+            $stmt->execute([':id' => $consultationId]);
+
+            return SuccessRenderer::render("Consultation supprimée avec succès.", $url);
+        } catch (\PDOException $e) {
+            return ErrorRenderer::render("Erreur lors de la suppression de la consultation : erreur de base de données.", $url);
         }
     }
 }

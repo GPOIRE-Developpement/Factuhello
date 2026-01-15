@@ -47,9 +47,10 @@ class InvoiceModel {
             $reductionAmount = $totalPrice * ($reductionPercent / 100);
             $finalAmount = $totalPrice - $reductionAmount;
 
-            // Insérer la facture
-            $stmt = $pdo->prepare("INSERT INTO invoices (total_amount, created_at) VALUES (:total_amount, NOW())");
+            // Insérer la facture (tav = 0 par défaut)
+            $stmt = $pdo->prepare("INSERT INTO invoices (tav, total_amount, created_at) VALUES (:tav, :total_amount, NOW())");
             $stmt->execute([
+                ':tav' => 0,
                 ':total_amount' => $finalAmount
             ]);
 
